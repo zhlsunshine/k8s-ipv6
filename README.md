@@ -38,6 +38,7 @@ $ systemctl enable kubelet.service
 ```
 $ kubeadm init --config=init-config-ipv6.yaml --dry-run | more
 $ kubeadm init --config=init-config-ipv6.yaml
+$ kubectl taint nodes --all node-role.kubernetes.io/master-
 ```
 
 ```
