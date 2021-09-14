@@ -2,9 +2,10 @@
 this repo is for deployment of kubernetes with IPv6 only
 
 ## Reference docs:
-https://sgryphon.wordpress.com/2021/01/05/kubernetes-on-ipv6-only/
-https://github.com/sgryphon/kubernetes-ipv6
-https://juejin.cn/post/6844903798687662094
+
+- https://sgryphon.wordpress.com/2021/01/05/kubernetes-on-ipv6-only/
+- https://github.com/sgryphon/kubernetes-ipv6
+- https://juejin.cn/post/6844903798687662094
 
 ## Set network for Ubuntu 18.04       
     Set `zhlsunshine` as the node name at first line of `/etc/hosts`
@@ -34,8 +35,11 @@ $ systemctl enable kubelet.service
 ```
 
 ## Set up the Kubernetes control plane       
+```
 $ kubeadm init --config=init-config-ipv6.yaml --dry-run | more
 $ kubeadm init --config=init-config-ipv6.yaml
+```
+
 ```
 W0913 13:22:19.715101   24654 utils.go:69] The recommended value for "healthzBindAddress" in "KubeletConfiguration" is: 127.0.0.1; the provided value is: ::1
 [init] Using Kubernetes version: v1.22.1
