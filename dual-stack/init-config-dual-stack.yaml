@@ -1,0 +1,32 @@
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: InitConfiguration
+nodeRegistration:
+  criSocket: unix:///run/containerd/containerd.sock
+  name: zhlsunshine
+  kubeletExtraArgs:
+    node-ip: 10.238.154.93,2001:db8:1234:5678::1
+---
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: ClusterConfiguration
+featureGates:
+  IPv6DualStack: true
+apiServer:
+  extraArgs:
+    service-cluster-ip-range: 192.168.0.0/16,2001:db8:1234:5678:8:3::/112
+controllerManager:
+  extraArgs:
+    cluster-cidr: 192.168.0.0/16,2001:db8:1234:5678:8:2::/64
+    node-cidr-mask-size-ipv4: '24'
+    node-cidr-mask-size-ipv6: '64'
+    service-cluster-ip-range: 192.168.0.0/16,2001:db8:1234:5678:8:3::/112
+networking:
+  podSubnet: 192.168.0.0/16,2001:db8:1234:5678::/56
+  serviceSubnet: 192.168.0.0/16,2001:db8:1234:5678:8:3::/112
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+cluster-cidr: 192.168.0.0/16,2001:db8:1234:5678:8:2::/64
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+cgroupDriver: systemd
