@@ -1,15 +1,32 @@
 # k8s-ipv6
-this repo is for deployment of kubernetes with IPv6 only
+This repo is for deployment of kubernetes with IPv6 support, there are 2 folds `ipv6-only` and `dual-stack`, including yaml files on how to install kubernetes components and calico via kubeadm and kubectl
 
 ## Reference docs:
 
+- https://kubernetes.io/docs/concepts/services-networking/dual-stack/#enable-ipv4-ipv6-dual-stack
 - https://sgryphon.wordpress.com/2021/01/05/kubernetes-on-ipv6-only/
 - https://github.com/sgryphon/kubernetes-ipv6
 - https://juejin.cn/post/6844903798687662094
 
 ## Set network for Ubuntu 18.04       
     Set `zhlsunshine` as the node name at first line of `/etc/hosts`
+```
 2001:db8:1234:5678::1 zhlsunshine
+```
+
+###### Letting iptables see bridged traffic:
+###### https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#configure-cgroup-driver-used-by-kubelet-on-control-plane-node
+```
+cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+br_netfilter
+EOF
+
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+sudo sysctl --system
+```
 
 ## Add following network setting file named `ipv6-eno1.network` under the folder `/etc/systemd/network`
 ```ipv6-eno1.network
@@ -60,3 +77,9 @@ $ kubectl taint nodes --all node-role.kubernetes.io/master-
 ## Deploy a Container Network Interface (CNI)       
 $ kubectl apply -f calico-ipv6.yaml
 $ kubectl get all --all-namespaces
+
+
+## Tips
+- Host/Node setting for IPv6 package forwarding and iptable calling for bridge
+- Container runtime setting for IPv6 support
+- Kubernetes components deployment
